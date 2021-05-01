@@ -1,22 +1,6 @@
 # Apt packages
 
-## Configuration
-
-### Suggested packages
-
-By default installing a package does not automatically install the packages it suggests. However packages suggested by other installed packages are not automatically removed. This often prevents packages which are no longer required from being automatically removed.
-
-Create `/etc/apt/apt.conf.d/99_nosuggests` with the following contents.
-
-    APT::AutoRemove::SuggestsImportant "false";
-
-### Apt history
-
-Edit `/etc/logrotate.d/apt` and set rotate to 60 to keep `history.log` for 5 years.
-
-## Maintenance
-
-### Remove sources
+## Remove sources
 
 Remove the sources from `/etc/apt/sources.list.d/`.
 
@@ -32,7 +16,7 @@ List and remove any unnecessary keys. The key ID is the last 2 elements of the f
 
     $ sudo apt-key del 0EBFCD88
 
-### Purge removed packages
+## Purge removed packages
 
 List the removed packages to purge.
 
@@ -42,7 +26,7 @@ Purge the removed packages.
 
     dpkg -l | awk '/^rc/{print $2}' | sudo xargs apt-get purge -y
 
-### Explain
+## Explain
 
 `aptitude` and `apt-rdepends` can attempt to explain why a package is installed.
 

@@ -85,6 +85,20 @@ Reload the iwlwifi module.
 
 This reduces the bandwidth to around 10 Mbps but prevents the network from dropping out regularly.
 
+### Apt
+
+#### Suggested packages
+
+By default installing a package does not automatically install the packages it suggests. However packages suggested by other installed packages are not automatically removed. This often prevents packages which are no longer required from being automatically removed.
+
+Create `/etc/apt/apt.conf.d/99_nosuggests` with the following contents.
+
+    APT::AutoRemove::SuggestsImportant "false";
+
+#### History
+
+Edit `/etc/logrotate.d/apt` and set rotate to 60 to keep `history.log` for 5 years.
+
 ### Clock
 
 Set the RTC clock to use local time.
