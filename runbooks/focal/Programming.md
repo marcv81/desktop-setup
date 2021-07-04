@@ -22,6 +22,17 @@ Download binaries from https://golang.org/dl/.
 
 Restart the session to update the PATH.
 
+## CUDA
+
+Update the Nvidia drivers if necessary.
+
+    sudo apt purge nvidia*
+    sudo ubuntu-drivers autoinstall
+
+Install CUDA.
+
+    sudo apt install nvidia-cuda-toolkit
+
 ## Docker
 
 Create `/etc/apt/sources.list.d/docker.list` with the following contents.
