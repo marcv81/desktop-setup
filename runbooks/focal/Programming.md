@@ -13,8 +13,9 @@
 
 Download binaries from https://golang.org/dl/.
 
-    sudo tar -C /usr/local -xzf go1.14.6.linux-amd64.tar.gz
-    echo 'export "PATH=/usr/local/go/bin:$PATH"' >>.profile
+    sudo tar -C /usr/local -xzf go1.16.4.linux-amd64.tar.gz
+    echo 'export "PATH=/usr/local/go/bin:$PATH"' >> ~/.profile
+    echo 'export "PATH=$PATH:/home/user/go/bin"' >> ~/.profile
 
 ## Rust
 
