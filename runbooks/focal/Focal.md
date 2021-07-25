@@ -166,6 +166,20 @@ Create /usr/local/bin/huion_setup.sh
 
 Run `huion_setup.sh` after connecting the device to map the pen to the display.
 
+### Canon LiDE 300 scanner
+
+Download the official drivers. Extract and install the package.
+
+    tar xvf scangearmp2-3.70-1-deb.tar.gz 
+    sudo apt install ./scangearmp2-3.70-1-deb/packages/scangearmp2_3.70-1_amd64.deb
+
+Install simple-scan and remove ippusbxd.
+
+    sudo apt install simple-scanner
+    sudo apt purge ippusbxd
+
+Reboot.
+
 ## Known issues
 
 ### NVIDIA graphics
