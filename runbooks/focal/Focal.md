@@ -48,6 +48,12 @@ Set the terminal color theme to "Tango Dark", and disable "Use transparency from
 
 Set the terminal "Copy" and "Paste" shortcuts to the dedicated keys.
 
+### Bash
+
+Add the following at the end of ~/.bashrc
+
+    export PS1='`if [ $? = 0 ]; then echo 🟢; else echo 🔴; fi` \t \w '
+
 ### Thermald
 
 Disable thermald.
