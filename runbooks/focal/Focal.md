@@ -151,27 +151,6 @@ Restart udev.
 
     sudo udevadm control --reload-rules
 
-### Huion Kamvas pen display
-
-Install `digimend-dkms_10_all.deb` from https://github.com/DIGImend/digimend-kernel-drivers/releases/tag/v10.
-
-Reboot.
-
-Find the monitor.
-
-    $ xrandr --listmonitors
-    Monitors: 2
-     0: +*HDMI-0 2560/798x1080/334+0+0  HDMI-0
-     1: +HDMI-1-2 1920/256x1080/144+334+1080  HDMI-1-2
-
-Create /usr/local/bin/huion_setup.sh
-
-    #!/usr/bin/env bash
-    set -euo pipefail
-    xsetwacom --list | grep 'type: STYLUS' | sed 's/.*id: \([[:digit:]]\+\).*/\1/' | xargs -I {} xinput map-to-output {} HDMI-1-2
-
-Run `huion_setup.sh` after connecting the device to map the pen to the display.
-
 ### Canon LiDE 300 scanner
 
 Download the official drivers. Extract and install the package.
