@@ -45,6 +45,40 @@ Allow the telegraf user to run `cpu_stats.py` in `/etc/sudoers.d/telegraf`.
 
     telegraf ALL=(root) NOPASSWD: /usr/local/bin/cpu_stats.py
 
+### Nuvoton NCT6796D
+
+Install lm-sensors.
+
+    sudo apt install lm-sensors
+
+Edit `/etc/default/grub` and add `acpi_enforce_resources=lax` to `GRUB_CMDLINE_LINUX_DEFAULT`. Run `sudo update-grub`.
+
+Create `/etc/modules-load.d/nct6775.conf` with the following contents.
+
+    nct6775
+
+Reboot.
+
+The following is an educated guess of the meaning of the different voltages on a H370-I motherboard.
+
+| Voltage | Name  | Description      |
+|---------|-------|------------------|
+| 0       | Vcore | Vcore            |
+| 1       | in1   | 5 * in1 = +5V    |
+| 2       | AVCC  | AVCC/3VSB        |
+| 3       | +3.3V | +3.3V            |
+| 4       | in4   | 12 * in4 = +12V  |
+| 5       | in5   | ? (~870mV)       |
+| 6       | in6   | ? (~870mV)       |
+| 7       | 3VSB  | AVCC/3VSB        |
+| 8       | Vbat  | CMOS battery     |
+| 9       | in9   | VTT              |
+| 10      | in10  | ? (~2V)          |
+| 11      | in11  | ? (~870mV)       |
+| 12      | in12  | 12 * in12 = +12V |
+| 13      | in13  | 5 * in13 = +5V   |
+| 14      | in14  | ? (~370mV)       |
+
 ## Configuration
 
 Use the `/etc/telegraf/telegraf.conf` from the files directory.
