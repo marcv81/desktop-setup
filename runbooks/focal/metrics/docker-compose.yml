@@ -1,0 +1,27 @@
+version: "3.7"
+services:
+  influxdb:
+    image: "influxdb:1.8.10"
+    environment:
+      INFLUXDB_HTTP_AUTH_ENABLED: "true"
+      INFLUXDB_ADMIN_USER: "admin"
+      INFLUXDB_ADMIN_PASSWORD: "admin"
+      INFLUXDB_HTTP_LOG_ENABLED: "false"
+    volumes:
+      - "influx-data:/var/lib/influxdb"
+      - "./initdb:/docker-entrypoint-initdb.d"
+    ports:
+      - "127.0.0.1:8086:8086"
+    restart: "unless-stopped"
+    hostname: influxdb
+  grafana:
+    image: "grafana/grafana"
+    volumes:
+      - "grafana-data:/var/lib/grafana"
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: "unless-stopped"
+    hostname: grafana
+volumes:
+  influx-data: {}
+  grafana-data: {}

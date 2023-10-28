@@ -1,0 +1,23 @@
+{
+  "id": 1,
+  "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449",
+  "orgId": 1,
+  "name": "Telegraf",
+  "type": "influxdb",
+  "typeName": "InfluxDB",
+  "typeLogoUrl": "/public/app/plugins/datasource/influxdb/img/influxdb_logo.svg",
+  "access": "proxy",
+  "url": "http://influxdb:8086/",
+  "user": "grafana",
+  "database": "telegraf",
+  "basicAuth": false,
+  "isDefault": true,
+  "jsonData": {
+      "httpMode": "GET",
+      "oauthPassThru": false,
+      "tlsAuth": false,
+      "tlsAuthWithCACert": false,
+      "tlsSkipVerify": false
+  },
+  "readOnly": false
+}
