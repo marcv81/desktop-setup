@@ -127,7 +127,7 @@
               "condition": "AND",
               "key": "sensor",
               "operator": "=",
-              "value": "coretemp_packageid0_input"
+              "value": "coretemp_package_id_0"
             }
           ]
         },
@@ -143,6 +143,12 @@
                 "$__interval"
               ],
               "type": "time"
+            },
+            {
+              "params": [
+                "name::tag"
+              ],
+              "type": "tag"
             },
             {
               "params": [
@@ -178,7 +184,7 @@
             },
             {
               "condition": "AND",
-              "key": "name",
+              "key": "name::tag",
               "operator": "=",
               "value": "NVIDIA GeForce RTX 3060"
             }
@@ -428,7 +434,7 @@
               "condition": "AND",
               "key": "sensor",
               "operator": "=",
-              "value": "iwlwifi_1_input"
+              "value": "iwlwifi_1"
             }
           ]
         },
@@ -487,7 +493,7 @@
               "condition": "AND",
               "key": "sensor",
               "operator": "=",
-              "value": "coretemp_packageid0_input"
+              "value": "coretemp_package_id_0"
             }
           ]
         },
@@ -503,6 +509,12 @@
                 "$__interval"
               ],
               "type": "time"
+            },
+            {
+              "params": [
+                "name::tag"
+              ],
+              "type": "tag"
             },
             {
               "params": [
@@ -544,7 +556,7 @@
             },
             {
               "condition": "AND",
-              "key": "name",
+              "key": "name::tag",
               "operator": "=",
               "value": "NVIDIA GeForce RTX 3060"
             }
@@ -818,7 +830,7 @@
               "condition": "AND",
               "key": "sensor",
               "operator": "=",
-              "value": "iwlwifi_1_input"
+              "value": "iwlwifi_1"
             }
           ]
         }
@@ -921,6 +933,12 @@
             },
             {
               "params": [
+                "name::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
                 "null"
               ],
               "type": "fill"
@@ -953,7 +971,7 @@
             },
             {
               "condition": "AND",
-              "key": "name",
+              "key": "name::tag",
               "operator": "=",
               "value": "NVIDIA GeForce RTX 3060"
             }
@@ -2477,6 +2495,12 @@
             },
             {
               "params": [
+                "name::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
                 "null"
               ],
               "type": "fill"
@@ -2509,7 +2533,7 @@
             },
             {
               "condition": "AND",
-              "key": "name",
+              "key": "name::tag",
               "operator": "=",
               "value": "NVIDIA GeForce RTX 3060"
             }
