@@ -27,9 +27,9 @@ Install smartctl, but disable smartd.
     sudo systemctl stop smartd
     sudo systemctl disable smartd
 
-Allow the telegraf user to run smartctl in `/etc/sudoers.d/telegraf`.
+Allow the `telegraf` user (`_telegraf` on Ubuntu 22.04) to run smartctl in `/etc/sudoers.d/telegraf`.
 
-    telegraf ALL=(root) NOPASSWD: /usr/sbin/smartctl
+    _telegraf ALL=(root) NOPASSWD: /usr/sbin/smartctl
 
 Install nvme-cli.
 
@@ -41,9 +41,9 @@ For NVME devices, the unit of `Data_Units_Read` and `Data_Units_Written` is 5120
 
 Install `cpu_stats.py` from https://github.com/marcv81/cpu-stats to `/usr/local/bin`.
 
-Allow the telegraf user to run `cpu_stats.py` in `/etc/sudoers.d/telegraf`.
+Allow the `telegraf` user (`_telegraf` on Ubuntu 22.04) to run `cpu_stats.py` in `/etc/sudoers.d/telegraf`.
 
-    telegraf ALL=(root) NOPASSWD: /usr/local/bin/cpu_stats.py
+    _telegraf ALL=(root) NOPASSWD: /usr/local/bin/cpu_stats.py
 
 ### Nuvoton NCT6796D
 
