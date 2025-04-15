@@ -16,7 +16,7 @@ Log in to http://localhost:3000. Set the Telegraf datasource password.
 
 Start an InfluxDB shell.
 
-    sudo docker exec -it influxdb_influxdb_1 /bin/bash
+    sudo docker exec -it metrics_influxdb_1 /bin/bash
     influx -username admin -password admin
 
 Dump Grafana datasources.

@@ -29,7 +29,7 @@ Install smartctl, but disable smartd.
 
 Allow the `telegraf` user (`_telegraf` on Ubuntu 22.04) to run smartctl in `/etc/sudoers.d/telegraf`.
 
-    _telegraf ALL=(root) NOPASSWD: /usr/sbin/smartctl
+    telegraf ALL=(root) NOPASSWD: /usr/sbin/smartctl
 
 Install nvme-cli.
 
@@ -37,15 +37,11 @@ Install nvme-cli.
 
 For NVME devices, the unit of `Data_Units_Read` and `Data_Units_Written` is 512000 bytes.
 
-### CPU stats
+### Turbostat
 
-Install `cpu_stats.py` from https://github.com/marcv81/cpu-stats to `/usr/local/bin`.
+Install `turbostat-telegraf` from https://github.com/marcv81/turbostat-telegraf.
 
-Allow the `telegraf` user (`_telegraf` on Ubuntu 22.04) to run `cpu_stats.py` in `/etc/sudoers.d/telegraf`.
-
-    _telegraf ALL=(root) NOPASSWD: /usr/local/bin/cpu_stats.py
-
-### Nuvoton NCT6796D
+### Nuvoton NCT6796D-S
 
 Install lm-sensors.
 
@@ -59,25 +55,16 @@ Create `/etc/modules-load.d/nct6775.conf` with the following contents.
 
 Reboot.
 
-The following is an educated guess of the meaning of the different voltages on a H370-I motherboard.
+For my motherboard and case, we have the following.
 
-| Voltage | Name  | Description      |
-|---------|-------|------------------|
-| 0       | Vcore | Vcore            |
-| 1       | in1   | 5 * in1 = +5V    |
-| 2       | AVCC  | AVCC/3VSB        |
-| 3       | +3.3V | +3.3V            |
-| 4       | in4   | 12 * in4 = +12V  |
-| 5       | in5   | ? (~870mV)       |
-| 6       | in6   | ? (~870mV)       |
-| 7       | 3VSB  | AVCC/3VSB        |
-| 8       | Vbat  | CMOS battery     |
-| 9       | in9   | VTT              |
-| 10      | in10  | ? (~2V)          |
-| 11      | in11  | ? (~870mV)       |
-| 12      | in12  | 12 * in12 = +12V |
-| 13      | in13  | 5 * in13 = +5V   |
-| 14      | in14  | ? (~370mV)       |
+- Temperature sensors
+  - `tsi0`,`smbusmaster_0`: CPU die
+  - `systin`: Motherboard
+  - `auxtin*`, `pch_*`: Garbage values
+- Fans
+  - `fan4`: `CHA1` (bottom)
+  - `fan5`: `CHA2` (back)
+  - `fan7`: `CHA3` (top)
 
 ## Configuration
 
