@@ -4,7 +4,7 @@
 
 Start InfluxDB and Grafana.
 
-    sudo docker-compose up -d
+    sudo docker compose up -d
 
 Setup the Grafana datasources and dashboards.
 
