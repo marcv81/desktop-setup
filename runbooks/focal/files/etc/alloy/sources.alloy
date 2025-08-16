@@ -1,0 +1,102 @@
+// Reads the systemd journal.
+// Sets the following labels: source, entity, level.
+declare "journal" {
+	argument "forward_to" {
+		optional = false
+	}
+
+	loki.source.journal "input" {
+		forward_to    = argument.forward_to.value
+		relabel_rules = loki.relabel.extract_labels.rules
+		labels        = {source = "journal"}
+	}
+
+	loki.relabel "extract_labels" {
+		forward_to = []
+
+		// Drop the job label that loki.source.journal adds.
+		rule {
+			regex  = "^job$"
+			action = "labeldrop"
+		}
+
+		// Set a default entity.
+		rule {
+			target_label = "entity"
+			replacement  = "unknown"
+		}
+
+		// Update the entity from the systemd unit if available.
+		rule {
+			source_labels = ["__journal__systemd_unit"]
+			target_label  = "entity"
+		}
+
+		// Set the level from the systemd priority.
+		rule {
+			source_labels = ["__journal_priority_keyword"]
+			target_label  = "level"
+		}
+	}
+}
+
+// Reads the Docker compose logs.
+// Sets the following labels: source, entity.
+declare "docker_compose" {
+	argument "forward_to" {
+		optional = false
+	}
+
+	discovery.docker "input_discovery" {
+		host = "unix:///var/run/docker.sock"
+	}
+
+	discovery.relabel "extract_labels" {
+		targets = discovery.docker.input_discovery.targets
+
+		// Set the Docker compose project if available.
+		rule {
+			source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+			target_label  = "docker_compose_project"
+		}
+
+		// Set the Docker compose service if available.
+		rule {
+			source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+			target_label  = "docker_compose_service"
+		}
+	}
+
+	loki.source.docker "input" {
+		host    = "unix:///var/run/docker.sock"
+		targets = discovery.docker.input_discovery.targets
+
+		forward_to    = [loki.relabel.filter_labels.receiver]
+		relabel_rules = discovery.relabel.extract_labels.rules
+		labels        = {source = "docker_compose"}
+	}
+
+	loki.relabel "filter_labels" {
+		forward_to = argument.forward_to.value
+
+		// Drop the logs with no Docker compose project.
+		rule {
+			source_labels = ["docker_compose_project"]
+			regex         = ".+"
+			action        = "keep"
+		}
+
+		// Set the entity from the Docker compose project and service.
+		rule {
+			source_labels = ["docker_compose_project", "docker_compose_service"]
+			separator     = "-"
+			target_label  = "entity"
+		}
+
+		// Drop the Docker compose project and service labels.
+		rule {
+			regex  = "^docker_compose_.+"
+			action = "labeldrop"
+		}
+	}
+}

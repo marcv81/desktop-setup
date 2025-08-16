@@ -1,0 +1,190 @@
+// Parses the log in search of a better level.
+// Updates the following label: level.
+declare "parse" {
+	argument "forward_to" {
+		optional = false
+	}
+
+	export "receiver" {
+		value = loki.process.parse.receiver
+	}
+
+	loki.process "parse" {
+		forward_to = argument.forward_to.value
+
+		// Attempt to extract the level.
+		stage.logfmt {
+			mapping = {
+				level1 = "lvl",   // InfluxDB
+				level2 = "level", // Grafana, Loki
+			}
+		}
+
+		stage.labels {
+			values = {level = "level1"}
+		}
+
+		stage.labels {
+			values = {level = "level2"}
+		}
+	}
+}
+
+// Converts the level label into structured metadata.
+// Sets the following structured metadata: level_num, level_text.
+// Drops the following label: level.
+declare "structured_metadata" {
+	argument "forward_to" {
+		optional = false
+	}
+
+	export "receiver" {
+		value = loki.process.structured_metadata.receiver
+	}
+
+	loki.process "structured_metadata" {
+		forward_to = argument.forward_to.value
+
+		stage.template {
+			source   = "level_num"
+			template = 6
+		}
+
+		stage.template {
+			source   = "level_text"
+			template = "info"
+		}
+
+		// Emergency (0)
+		stage.match {
+			selector = "{level=~\"emerg\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 0
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "emergency"
+			}
+		}
+
+		// Alert (1)
+		stage.match {
+			selector = "{level=~\"alert\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 1
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "alert"
+			}
+		}
+
+		// Critical (2)
+		stage.match {
+			selector = "{level=~\"crit\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 2
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "critical"
+			}
+		}
+
+		// Error (3)
+		stage.match {
+			selector = "{level=~\"err\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 3
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "error"
+			}
+		}
+
+		// Warning (4)
+		stage.match {
+			selector = "{level=~\"warn\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 4
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "warning"
+			}
+		}
+
+		// Notice (5)
+		stage.match {
+			selector = "{level=~\"notice\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 5
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "notice"
+			}
+		}
+
+		// Info (6)
+		stage.match {
+			selector = "{level=~\"info\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 6
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "info"
+			}
+		}
+
+		// Debug (7)
+		stage.match {
+			selector = "{level=~\"debug\"}"
+
+			stage.template {
+				source   = "level_num"
+				template = 7
+			}
+
+			stage.template {
+				source   = "level_text"
+				template = "debug"
+			}
+		}
+
+		// Set the structured metadata.
+		stage.structured_metadata {
+			values = {
+				level_text = "",
+				level_num  = "",
+			}
+		}
+
+		stage.label_drop {
+			values = ["level"]
+		}
+	}
+}

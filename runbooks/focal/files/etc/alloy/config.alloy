@@ -1,0 +1,37 @@
+logging {
+  level = "warn"
+}
+
+livedebugging {
+  enabled = true
+}
+
+import.file "sources" {
+  filename = "/etc/alloy/sources.alloy"
+}
+
+import.file "level" {
+  filename = "/etc/alloy/level.alloy"
+}
+
+sources.journal "input" {
+  forward_to = [level.parse.process.receiver]
+}
+
+sources.docker_compose "input" {
+  forward_to = [level.parse.process.receiver]
+}
+
+level.parse "process" {
+  forward_to = [level.structured_metadata.process.receiver]
+}
+
+level.structured_metadata "process" {
+  forward_to = [loki.write.output.receiver]
+}
+
+loki.write "output" {
+  endpoint {
+    url = "http://localhost:3100/loki/api/v1/push"
+  }
+}
