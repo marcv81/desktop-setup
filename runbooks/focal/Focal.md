@@ -105,12 +105,6 @@ Create `/etc/apt/apt.conf.d/99_nosuggests` with the following contents.
 
 Edit `/etc/logrotate.d/apt` and set rotate to 60 to keep `history.log` for 5 years.
 
-### Clock
-
-Set the RTC clock to use local time.
-
-    timedatectl set-local-rtc 1
-
 ### SSH keys
 
 Restore the SSH keys from a backup.
