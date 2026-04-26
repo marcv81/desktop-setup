@@ -29,38 +29,9 @@ Type=Application
 
 Run LM Studio. Download `gpt-oss:20b`. Increase the context window to 16384 before loading the model. Set the reasoning to high. Enable the local server.
 
-# Codex
-
-Install Codex.
-
-```
-sudo apt install npm
-sudo npm install -g @openai/codex
-```
-
-Add the following to `~/.codex/config.toml`.
-
-```
-[model_providers.lms]
-name = "LM Studio"
-base_url = "http://localhost:1234/v1"
-
-[profiles.gpt-oss-20b-lms]
-model_provider = "lms"
-model = "gpt-oss:20b"
-```
-
-Start Codex with the following parameters.
-
-```
-codex --profile gpt-oss-20b-lms
-```
-
-As of `0.98.0`, Codex is not usable. Tools calls keep failing. LM Studio shows `[Server Error] [Object object]` in the logs.
-
 # OpenCode
 
-YOLO install with `curl -fsSL https://opencode.ai/install | bash`.
+Install with `curl -fsSL https://opencode.ai/install | bash`.
 
 Configure `~/.config/opencode/opencode.json` as follows
 
@@ -84,3 +55,12 @@ Install `xclip` to support copying to the clipboard.
 ```
 sudo apt install xclip
 ```
+
+As of `1.1.53`, OpenCode works reasonably well.
+
+# Models
+
+I have reasonable success with `google/gemma-4-26b-a4b`.
+
+- Increase the context window to the maximum (262144 tokens).
+- Decrease GPU offload to 10.
