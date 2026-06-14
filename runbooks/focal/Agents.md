@@ -1,33 +1,33 @@
-# LM Studio
+# llama.cpp
 
-Download the AppImage from the official website (`LM-Studio-0.4.2-2-x64.AppImage`).
+## Build
 
-Install the AppImage.
+Clone and build.
 
-```
-mv LM-Studio-0.4.2-2-x64.AppImage ~/.local/bin/LM-Studio.AppImage
-chmod 755 ~/.local/bin/LM-Studio.AppImage
-```
+    git clone https://github.com/ggml-org/llama.cpp
+    cd llama.cpp
+    cmake -B build -DGGML_CUDA=ON
+    cmake --build build --config Release -j 16
 
-Extract the icon from the AppImage.
+## Models
 
-```
-~/.local/bin/LM-Studio.AppImage --appimage-extract
-cp squashfs-root/lm-studio.png ~/.local/share/icons/lm-studio.png
-rm squashfs-root -rf
-```
+Run `gemma-4-26b` MoE.
 
-Create `~/.local/share/applications/LM-Studio.desktop`.
+    ./build/bin/llama-server \
+      -hf ggml-org/gemma-4-26B-A4B-it-GGUF:Q4_K_M \
+      --alias gemma-4-26b-a4b \
+      -ngl all \
+      -ot "exps=CPU" \
+      -c 262144
 
-```
-[Desktop Entry]
-Name=LM Studio
-Exec=/home/user/.local/bin/LM-Studio.AppImage --no-sandbox
-Icon=/home/user/.local/share/icons/lm-studio.png
-Type=Application
-```
+Run `qwen3.6-35b` MoE.
 
-Run LM Studio. Download `gpt-oss:20b`. Increase the context window to 16384 before loading the model. Set the reasoning to high. Enable the local server.
+    ./build/bin/llama-server \
+      -hf unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M \
+      --alias qwen3.6-35b-a3b \
+      -ngl all \
+      -ot "exps=CPU" \
+      -c 262144
 
 # OpenCode
 
@@ -38,12 +38,18 @@ Configure `~/.config/opencode/opencode.json` as follows
 ```
 {
   "$schema": "https://opencode.ai/config.json",
+  "plugin": ["superpowers@git+https://github.com/obra/superpowers.git"],
   "provider": {
-    "lmstudio": {
+    "llama.cpp": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "LM Studio (local)",
+      "name": "llama.cpp (local)",
       "options": {
-        "baseURL": "http://localhost:1234/v1"
+        "baseURL": "http://localhost:8080/v1"
+      },
+      "models": {
+        "llama.cpp": {
+          "name": "llama.cpp"
+        }
       }
     }
   }
@@ -55,12 +61,3 @@ Install `xclip` to support copying to the clipboard.
 ```
 sudo apt install xclip
 ```
-
-As of `1.1.53`, OpenCode works reasonably well.
-
-# Models
-
-I have reasonable success with `google/gemma-4-26b-a4b`.
-
-- Increase the context window to the maximum (262144 tokens).
-- Decrease GPU offload to 10.
