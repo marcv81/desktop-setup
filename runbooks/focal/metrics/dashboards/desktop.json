@@ -55,7 +55,403 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "watt"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "alias": "gpu",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "name::tag"
+              ],
+              "type": "tag"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "nvidia_smi",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "power_draw"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "name::tag",
+              "operator": "=",
+              "value": "NVIDIA GeForce RTX 3060"
+            }
+          ]
+        },
+        {
+          "alias": "package",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "turbostat",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "package_power_watt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "core::tag",
+              "operator": "=",
+              "value": "-"
+            },
+            {
+              "condition": "AND",
+              "key": "cpu::tag",
+              "operator": "=",
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "alias": "core",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "turbostat",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "D",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "core_power_watt"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "core::tag",
+              "operator": "=",
+              "value": "-"
+            },
+            {
+              "condition": "AND",
+              "key": "cpu::tag",
+              "operator": "=",
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "alias": "package-rapl",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "rapl",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"power\") FROM (SELECT non_negative_derivative(mean(\"energy_joules\"), 1s) AS \"power\" FROM \"rapl\" WHERE (\"host\"::tag = 'desktop' AND \"power_zone\"::tag = 'intel-rapl:0') AND $timeFilter GROUP BY time(10s) fill(null)) GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "energy_joules"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "1s"
+                ],
+                "type": "non_negative_derivative"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "power_zone::tag",
+              "operator": "=",
+              "value": "intel-rapl:0"
+            }
+          ]
+        },
+        {
+          "alias": "core-rapl",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "rapl",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"power\") FROM (SELECT non_negative_derivative(mean(\"energy_joules\"), 1s) AS \"power\" FROM \"rapl\" WHERE (\"host\"::tag = 'desktop' AND \"power_zone\"::tag = 'intel-rapl:0:0') AND $timeFilter GROUP BY time(10s) fill(null)) GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "E",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "energy_joules"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "1s"
+                ],
+                "type": "non_negative_derivative"
+              },
+              {
+                "params": [
+                  "* 8"
+                ],
+                "type": "math"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "power_zone::tag",
+              "operator": "=",
+              "value": "intel-rapl:0:0"
+            }
+          ]
+        }
+      ],
+      "title": "Power",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -85,8 +481,8 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 6,
-        "x": 0,
+        "w": 8,
+        "x": 8,
         "y": 0
       },
       "id": 2,
@@ -610,7 +1006,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -640,8 +1036,8 @@
       },
       "gridPos": {
         "h": 9,
-        "w": 6,
-        "x": 6,
+        "w": 8,
+        "x": 16,
         "y": 0
       },
       "id": 42,
@@ -937,7 +1333,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -961,281 +1357,15 @@
               }
             ]
           },
-          "unit": "watt"
+          "unit": "hertz"
         },
         "overrides": []
       },
       "gridPos": {
         "h": 9,
         "w": 6,
-        "x": 12,
-        "y": 0
-      },
-      "id": 10,
-      "links": [],
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "alias": "gpu",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "name::tag"
-              ],
-              "type": "tag"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "nvidia_smi",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "power_draw"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=",
-              "value": "desktop"
-            },
-            {
-              "condition": "AND",
-              "key": "name::tag",
-              "operator": "=",
-              "value": "NVIDIA GeForce RTX 3060"
-            }
-          ]
-        },
-        {
-          "alias": "package",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "turbostat",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "pkgwatt"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=",
-              "value": "desktop"
-            },
-            {
-              "condition": "AND",
-              "key": "core::tag",
-              "operator": "=",
-              "value": "-"
-            },
-            {
-              "condition": "AND",
-              "key": "cpu::tag",
-              "operator": "=",
-              "value": "-"
-            }
-          ]
-        },
-        {
-          "alias": "core",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "turbostat",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "D",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "corwatt"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host::tag",
-              "operator": "=",
-              "value": "desktop"
-            },
-            {
-              "condition": "AND",
-              "key": "core::tag",
-              "operator": "=",
-              "value": "-"
-            },
-            {
-              "condition": "AND",
-              "key": "cpu::tag",
-              "operator": "=",
-              "value": "-"
-            }
-          ]
-        }
-      ],
-      "title": "Power",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "rotmhz"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 18,
-        "y": 0
+        "x": 0,
+        "y": 9
       },
       "id": 41,
       "links": [],
@@ -1254,7 +1384,7 @@
       "pluginVersion": "10.2.0",
       "targets": [
         {
-          "alias": "cpu-[[tag_cpu]]",
+          "alias": "cpu_[[tag_cpu]]",
           "datasource": {
             "type": "influxdb",
             "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
@@ -1289,7 +1419,7 @@
             [
               {
                 "params": [
-                  "avg_mhz"
+                  "average_frequency_mhz"
                 ],
                 "type": "field"
               },
@@ -1309,6 +1439,72 @@
               "condition": "AND",
               "key": "cpu::tag",
               "operator": "!=",
+              "value": "-"
+            },
+            {
+              "condition": "AND",
+              "key": "core::tag",
+              "operator": "!=",
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "alias": "cpu_average",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "turbostat",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "average_frequency"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "cpu::tag",
+              "operator": "=",
+              "value": "-"
+            },
+            {
+              "condition": "AND",
+              "key": "core::tag",
+              "operator": "=",
               "value": "-"
             }
           ]
@@ -1350,7 +1546,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1382,7 +1578,7 @@
       "gridPos": {
         "h": 9,
         "w": 6,
-        "x": 0,
+        "x": 6,
         "y": 9
       },
       "id": 39,
@@ -1892,6 +2088,269 @@
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 12,
+        "y": 9
+      },
+      "id": 44,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "alias": "c1",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "turbostat",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "c1_percent"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "core::tag",
+              "operator": "=",
+              "value": "-"
+            },
+            {
+              "condition": "AND",
+              "key": "cpu::tag",
+              "operator": "=",
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "alias": "c2",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "turbostat",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "c2_percent"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "core::tag",
+              "operator": "=",
+              "value": "-"
+            },
+            {
+              "condition": "AND",
+              "key": "cpu::tag",
+              "operator": "=",
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "alias": "c3",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "turbostat",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "c3_percent"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host::tag",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "core::tag",
+              "operator": "=",
+              "value": "-"
+            },
+            {
+              "condition": "AND",
+              "key": "cpu::tag",
+              "operator": "=",
+              "value": "-"
+            }
+          ]
+        }
+      ],
+      "title": "C-States",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
             "hideFrom": {
@@ -1907,7 +2366,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -1938,7 +2397,7 @@
       "gridPos": {
         "h": 9,
         "w": 6,
-        "x": 6,
+        "x": 18,
         "y": 9
       },
       "id": 21,
@@ -2135,7 +2594,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -2167,8 +2626,8 @@
       "gridPos": {
         "h": 9,
         "w": 6,
-        "x": 12,
-        "y": 9
+        "x": 0,
+        "y": 18
       },
       "id": 8,
       "links": [],
@@ -2317,7 +2776,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -2349,8 +2808,8 @@
       "gridPos": {
         "h": 9,
         "w": 6,
-        "x": 18,
-        "y": 9
+        "x": 6,
+        "y": 18
       },
       "id": 11,
       "links": [],
@@ -2509,7 +2968,7 @@
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
+            "insertNulls": 3600000,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -2517,467 +2976,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "Bps"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "write"
-            },
-            "properties": [
-              {
-                "id": "custom.transform",
-                "value": "negative-Y"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 0,
-        "y": 18
-      },
-      "id": 31,
-      "links": [],
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "alias": "read",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "diskio",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "read_bytes"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "1s"
-                ],
-                "type": "non_negative_derivative"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=",
-              "value": "desktop"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_MODEL",
-              "operator": "=",
-              "value": "Samsung SSD 970 EVO 500GB"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_SERIAL_SHORT",
-              "operator": "=",
-              "value": "S466NB0K412967V"
-            }
-          ]
-        },
-        {
-          "alias": "write",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "diskio",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "write_bytes"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "1s"
-                ],
-                "type": "non_negative_derivative"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=",
-              "value": "desktop"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_MODEL",
-              "operator": "=",
-              "value": "Samsung SSD 970 EVO 500GB"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_SERIAL_SHORT",
-              "operator": "=",
-              "value": "S466NB0K412967V"
-            }
-          ]
-        }
-      ],
-      "title": "SSD1 I/O",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "links": [],
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "Bps"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "write"
-            },
-            "properties": [
-              {
-                "id": "custom.transform",
-                "value": "negative-Y"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 6,
-        "y": 18
-      },
-      "id": 33,
-      "links": [],
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "10.2.0",
-      "targets": [
-        {
-          "alias": "read",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "diskio",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "read_bytes"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "1s"
-                ],
-                "type": "non_negative_derivative"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=",
-              "value": "desktop"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_MODEL",
-              "operator": "=",
-              "value": "CT2000MX500SSD1"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_SERIAL_SHORT",
-              "operator": "=",
-              "value": "2052E4E205F2"
-            }
-          ]
-        },
-        {
-          "alias": "write",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "diskio",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "write_bytes"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "1s"
-                ],
-                "type": "non_negative_derivative"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "host",
-              "operator": "=",
-              "value": "desktop"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_MODEL",
-              "operator": "=",
-              "value": "CT2000MX500SSD1"
-            },
-            {
-              "condition": "AND",
-              "key": "ID_SERIAL_SHORT",
-              "operator": "=",
-              "value": "2052E4E205F2"
-            }
-          ]
-        }
-      ],
-      "title": "SSD (SATA) I/O",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -3195,7 +3194,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": true,
+            "spanNulls": 3600000,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -3366,16 +3365,474 @@
       ],
       "title": "Wi-Fi link quality",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 3600000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "write"
+            },
+            "properties": [
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 0,
+        "y": 27
+      },
+      "id": 31,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "alias": "read",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "diskio",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "read_bytes"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "1s"
+                ],
+                "type": "non_negative_derivative"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_MODEL",
+              "operator": "=",
+              "value": "Samsung SSD 970 EVO 500GB"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_SERIAL_SHORT",
+              "operator": "=",
+              "value": "S466NB0K412967V"
+            }
+          ]
+        },
+        {
+          "alias": "write",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "diskio",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "write_bytes"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "1s"
+                ],
+                "type": "non_negative_derivative"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_MODEL",
+              "operator": "=",
+              "value": "Samsung SSD 970 EVO 500GB"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_SERIAL_SHORT",
+              "operator": "=",
+              "value": "S466NB0K412967V"
+            }
+          ]
+        }
+      ],
+      "title": "SSD1 I/O",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": 3600000,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "links": [],
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "write"
+            },
+            "properties": [
+              {
+                "id": "custom.transform",
+                "value": "negative-Y"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 6,
+        "y": 27
+      },
+      "id": 33,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.2.0",
+      "targets": [
+        {
+          "alias": "read",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "diskio",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "read_bytes"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "1s"
+                ],
+                "type": "non_negative_derivative"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_MODEL",
+              "operator": "=",
+              "value": "CT2000MX500SSD1"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_SERIAL_SHORT",
+              "operator": "=",
+              "value": "2052E4E205F2"
+            }
+          ]
+        },
+        {
+          "alias": "write",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "ea571201-ace1-4d79-9630-b5dc8c3f1449"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "diskio",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "write_bytes"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "1s"
+                ],
+                "type": "non_negative_derivative"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "host",
+              "operator": "=",
+              "value": "desktop"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_MODEL",
+              "operator": "=",
+              "value": "CT2000MX500SSD1"
+            },
+            {
+              "condition": "AND",
+              "key": "ID_SERIAL_SHORT",
+              "operator": "=",
+              "value": "2052E4E205F2"
+            }
+          ]
+        }
+      ],
+      "title": "SSD (SATA) I/O",
+      "type": "timeseries"
     }
   ],
   "refresh": "10s",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": [],
   "templating": {
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-3h",
     "to": "now"
   },
   "timepicker": {
