@@ -13,10 +13,6 @@ Add the following line to `/etc/pam.d/sudo`, just before `@include common-sessio
 
     session [success=1 default=ignore] pam_succeed_if.so quiet uid = 0 ruser = telegraf
 
-Add the following line to `/etc/sudoers.d/telegraf`.
-
-    Defaults:telegraf !syslog
-
 ## Dependencies
 
 ### SMART
@@ -39,7 +35,7 @@ For NVME devices, the unit of `Data_Units_Read` and `Data_Units_Written` is 5120
 
 ### Turbostat
 
-Install `turbostat-telegraf` from https://github.com/marcv81/turbostat-telegraf.
+Install `turbostat-telegraf-plugin` from https://github.com/marcv81/turbostat-telegraf-plugin.
 
 ### Nuvoton NCT6796D-S
 
