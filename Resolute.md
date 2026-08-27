@@ -117,7 +117,7 @@ Add the user to the docker group.
 
     sudo usermod -a -G docker user
 
-Restart the session to apply the group change.
+Reboot to apply the group change.
 
 ## Apps
 
