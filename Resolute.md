@@ -43,6 +43,7 @@ Install Gnome Tweaks.
 
 Configure Gnome.
 - In `Tweaks > Appearance` select the Yaru icons and cursor.
+- In `Tweaks > Mouse & Touchpad` turn on "Middle Click Paste".
 - In `Settings > Accessibility > Seeing > Cursor Size` select a larger cursor.
 - In `Settings > Appearance` select a background image and use the dark style.
 - In `Settings > Multitasking` enable "Window Resize" to snap/resize windows by dragging them to the edges of the screen.
