@@ -86,6 +86,8 @@ Restore the SSH key from a backup.
 
 ## APT
 
+Edit `/etc/apt/sources.list.d/ubuntu.sources`. Replace `sg.archive.ubuntu.com` with `archive.ubuntu.com`. The local mirror is unreliable.
+
 By default APT does not install "suggested" packages. But it does not remove a package if another still "suggests" it. This makes `apt install` and `apt autoremove` asymmetric.
 
 Create `/etc/apt/apt.conf.d/99_nosuggests` with the following contents.
