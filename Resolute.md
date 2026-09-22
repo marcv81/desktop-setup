@@ -25,6 +25,8 @@ Change the following lines in `/etc/default/grub`.
     GRUB_DISABLE_OS_PROBER=true
     GRUB_GFXMODE=2560x1080
 
+There is a race condition between Plymouth and Gnome. Plymouth retains ownership of the display until after Gnome starts. Gnome stalls, GDM sees an unclaimed display, and the GDM login displays instead of the Gnome desktop. Commenting out the `GRUB_CMDLINE_LINUX_DEFAULT` line (or just removing "splash") fixes the problem as it disables Plymouth. This is a bug, I expect the workaround not to be necessary at some point in the future.
+
 Update Grub.
 
     sudo update-grub
