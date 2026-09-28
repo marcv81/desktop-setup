@@ -82,6 +82,12 @@ Create a symlink in the user's home.
 
     ln -s /data/user/ ~/data
 
+## AMD R9700
+
+To limit the GPU power draw, create `/etc/udev/rules.d/30-amdgpu-power.rules` with the following contents.
+
+    ACTION=="add|change", SUBSYSTEM=="hwmon", ATTRS{vendor}=="0x1002", ATTRS{device}=="0x7551", ATTR{power1_cap}="210000000"
+
 ## SSH key
 
 Restore the SSH key from a backup.
