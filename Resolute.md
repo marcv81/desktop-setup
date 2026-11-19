@@ -146,6 +146,32 @@ Edit `/usr/share/applications/org.keepassxc.KeePassXC.desktop` and set `StartupN
 
 In `Settings > Apps > KeepassXC` disable autostart.
 
+### Google Earth
+
+Install Flatpak, and add the Flathub remote.
+
+    sudo apt update
+    sudo apt install flatpak
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+Restart the computer, then install Google Earth.
+
+    flatpak install flathub com.google.EarthPro
+
+### LibreOffice
+
+Install LibreOffice.
+
+    sudo apt update
+    sudo apt install libreoffice
+
+### GIMP
+
+Install GIMP.
+
+    sudo apt update
+    sudo apt install gimp
+
 ## Thermald
 
 Disable thermald.
