@@ -88,6 +88,15 @@ To limit the GPU power draw, create `/etc/udev/rules.d/30-amdgpu-power.rules` wi
 
     ACTION=="add|change", SUBSYSTEM=="hwmon", ATTRS{vendor}=="0x1002", ATTRS{device}=="0x7551", ATTR{power1_cap}="210000000"
 
+## MX Master 4
+
+Install Solaar.
+
+    sudo apt update
+    sudo apt install solaar
+
+Restart the computer.
+
 ## SSH key
 
 Restore the SSH key from a backup.
