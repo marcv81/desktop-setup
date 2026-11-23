@@ -88,6 +88,8 @@ To limit the GPU power draw, create `/etc/udev/rules.d/30-amdgpu-power.rules` wi
 
     ACTION=="add|change", SUBSYSTEM=="hwmon", ATTRS{vendor}=="0x1002", ATTRS{device}=="0x7551", ATTR{power1_cap}="210000000"
 
+Add `amdgpu.runpm=0` to `GRUB_CMDLINE_LINUX_DEFAULT` in `/etc/default/grub` to prevent the GPU from going to sleep. Run `sudo update-grub` and restart.
+
 ## MX Master 4
 
 Install Solaar.
